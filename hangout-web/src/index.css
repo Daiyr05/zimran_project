@@ -1,0 +1,111 @@
+@import 'tailwindcss';
+
+/* Dark mode follows the system, or a "dark" class on <html> set by the theme toggle. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+  Design tokens. Change colors here only; components use the Tailwind names below
+  (bg-bg, bg-surface, text-ink, text-muted, border-line, bg-brand, bg-accent ...).
+  Palette: "evening out" — deep indigo night + warm coral lights.
+*/
+:root {
+  color-scheme: light;
+  --bg: #f7f5f2;
+  --surface: #ffffff;
+  --surface-2: #f1eee9;
+  --ink: #1c1638;
+  --muted: #6b6680;
+  --line: #e5e1da;
+  --brand: #3b2f8f;
+  --brand-ink: #ffffff;
+  --brand-soft: #ebe8fb;
+  --accent: #ff6b5a;
+  --accent-ink: #ffffff;
+  --accent-soft: #ffe9e5;
+  --good: #1f8a5b;
+  --warn: #b7791f;
+  --bad: #c43d3d;
+}
+
+.dark {
+  color-scheme: dark;
+  --bg: #120e24;
+  --surface: #1c1638;
+  --surface-2: #251e47;
+  --ink: #f4f2fb;
+  --muted: #a7a1c2;
+  --line: #2f2856;
+  --brand: #8e82f0;
+  --brand-ink: #120e24;
+  --brand-soft: #2a2259;
+  --accent: #ff7e6f;
+  --accent-ink: #120e24;
+  --accent-soft: #3a2230;
+  --good: #4fc28e;
+  --warn: #e3b25a;
+  --bad: #f07a7a;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-brand: var(--brand);
+  --color-brand-ink: var(--brand-ink);
+  --color-brand-soft: var(--brand-soft);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-good: var(--good);
+  --color-warn: var(--warn);
+  --color-bad: var(--bad);
+
+  --font-display: 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+  --radius-card: 1.25rem;
+  --shadow-card: 0 1px 2px rgb(28 22 56 / 0.04), 0 8px 24px -12px rgb(28 22 56 / 0.12);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Native dropdown lists (time, age, food needs) follow the app theme, so options stay readable. */
+select option {
+  background-color: var(--surface);
+  color: var(--ink);
+}

@@ -1,0 +1,55 @@
+# Whole MVP: Postgres + Java API + React app.
+#   docker compose up --build
+# Web: http://localhost:3000   API: http://localhost:8080/api/v1   Swagger: http://localhost:8080/swagger-ui.html
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: hangout
+      POSTGRES_USER: hangout
+      POSTGRES_PASSWORD: hangout
+    ports:
+      - "5433:5432"
+    volumes:
+      - hangout-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hangout -d hangout"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  api:
+    build: ./hangout-api
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/hangout
+      DB_USER: hangout
+      DB_PASSWORD: hangout
+      JWT_SECRET: ${JWT_SECRET:-change-me-this-is-a-dev-only-secret-at-least-32-bytes!!}
+      PUBLIC_URL: ${PUBLIC_URL:-http://localhost:8080}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://localhost:5173,http://localhost:4173}
+      DEMO_UPGRADE: ${DEMO_UPGRADE:-true}
+      GOOGLE_ENABLED: "false"
+    ports:
+      - "8080:8080"
+    volumes:
+      - hangout-uploads:/data/uploads
+
+  web:
+    build:
+      context: ./hangout-web
+      args:
+        VITE_USE_MOCKS: "false"
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:8080/api/v1}
+        VITE_DEMO_UPGRADE: ${DEMO_UPGRADE:-true}
+    depends_on:
+      - api
+    ports:
+      - "3000:80"
+
+volumes:
+  hangout-db:
+  hangout-uploads:

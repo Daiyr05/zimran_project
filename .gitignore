@@ -1,0 +1,11 @@
+# backups of the old per-folder git repos (restore with: mv .hangout-web.git.bak hangout-web/.git)
+.hangout-web.git.bak/
+.hangout-api.git.bak/
+.DS_Store
+hangout-web/node_modules/
+hangout-web/dist/
+hangout-api/target/
+hangout-api/uploads/
+
+# requirements doc stays local only
+*.docx

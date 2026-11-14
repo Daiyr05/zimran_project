@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://db:5432/hangout}
+hangout:
+  uploads:
+    dir: /data/uploads

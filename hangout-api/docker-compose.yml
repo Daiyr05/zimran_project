@@ -1,0 +1,41 @@
+# Backend only: Postgres + API. From the project root, docker-compose.yml also builds the web app.
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: hangout
+      POSTGRES_USER: hangout
+      POSTGRES_PASSWORD: hangout
+    ports:
+      - "5433:5432"
+    volumes:
+      - hangout-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hangout -d hangout"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  api:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/hangout
+      DB_USER: hangout
+      DB_PASSWORD: hangout
+      JWT_SECRET: ${JWT_SECRET:-change-me-this-is-a-dev-only-secret-at-least-32-bytes!!}
+      PUBLIC_URL: ${PUBLIC_URL:-http://localhost:8080}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173,http://localhost:4173,http://localhost:3000}
+      DEMO_UPGRADE: ${DEMO_UPGRADE:-true}
+      GOOGLE_ENABLED: "false"
+    ports:
+      - "8080:8080"
+    volumes:
+      - hangout-uploads:/data/uploads
+
+volumes:
+  hangout-db:
+  hangout-uploads:
